@@ -29,7 +29,5 @@ report_*.xlsx
 .idea/
 
 # Config
-config.ini
 
-/config copy.txt
-/
+
