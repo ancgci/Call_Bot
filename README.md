@@ -173,7 +173,6 @@ O relatório será salvo em formato Excel com:
 
 ## Limitações
 
-- Funciona apenas com contratos da Solana
 - Requer conexão estável com internet
 - Necessita de sessão Telegram ativa
 - Tracking depende da disponibilidade da DEXScreener API
