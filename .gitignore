@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+.env
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite3
+
+# Reports
+report_*.xlsx
+
+# Telegram session
+*.session
+
+# IDE
+.vscode/
+.idea/
+
+# Config
+config.ini
+
+/config copy.txt
+/
