@@ -29,5 +29,6 @@ report_*.xlsx
 .idea/
 
 # Config
+config.ini
 
 
