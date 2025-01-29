@@ -1,6 +1,7 @@
 import sqlite3
 import pandas as pd
 from datetime import datetime, timedelta
+import configparser
 
 def setup_database():
     """Configura o banco de dados SQLite"""
@@ -10,8 +11,8 @@ def setup_database():
     CREATE TABLE IF NOT EXISTS contracts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         contract_address TEXT,
-        detection_date DATE,
-        detection_time TIME,
+        detection_date TEXT,
+        detection_time TEXT,
         initial_price REAL,
         initial_mcap REAL,
         price_10m REAL,
@@ -25,8 +26,13 @@ def setup_database():
     conn.commit()
     conn.close()
 
-def create_report(days=7):
+def create_report():
     """Gera relatório em Excel dos últimos X dias"""
+    # Carregar configuração do arquivo config.ini
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    days = int(config['Report']['days'])
+
     # Garantir que a tabela existe
     setup_database()
     

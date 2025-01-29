@@ -117,10 +117,14 @@ def setup_database():
         detection_time TEXT,
         initial_price REAL,
         initial_mcap REAL,
-        price_10m REAL,
+        price_1m REAL,
+        price_5m REAL,
+        price_15m REAL,
         price_30m REAL,
         price_1h REAL,
-        gain_10m REAL,
+        gain_1m REAL,
+        gain_5m REAL,
+        gain_15m REAL,
         gain_30m REAL,
         gain_1h REAL
     )
@@ -149,10 +153,13 @@ async def get_token_info(contract_address):
 async def schedule_price_updates(contract_address, detection_time):
     """Agenda atualizações de preço para diferentes intervalos"""
     try:
-        delays = [
-            (timedelta(minutes=10), 'price_10m', 'gain_10m'),
-            (timedelta(minutes=30), 'price_30m', 'gain_30m'),
-            (timedelta(hours=1), 'price_1h', 'gain_1h')
+        # Carregar intervalos de tempo do config.ini
+        intervals = [
+            (timedelta(minutes=int(config['Intervals']['interval1'])), 'price_1m', 'gain_1m'),
+            (timedelta(minutes=int(config['Intervals']['interval2'])), 'price_5m', 'gain_5m'),
+            (timedelta(minutes=int(config['Intervals']['interval3'])), 'price_15m', 'gain_15m'),
+            (timedelta(minutes=int(config['Intervals']['interval4'])), 'price_30m', 'gain_30m'),
+            (timedelta(minutes=int(config['Intervals']['interval5'])), 'price_1h', 'gain_1h')
         ]
         
         initial_info = await get_token_info(contract_address)
@@ -183,7 +190,7 @@ async def schedule_price_updates(contract_address, detection_time):
             conn.commit()
             
             # Agenda atualizações
-            for delay, price_field, gain_field in delays:
+            for delay, price_field, gain_field in intervals:
                 try:
                     await asyncio.sleep(delay.total_seconds())
                     current_info = await get_token_info(contract_address)
@@ -280,7 +287,9 @@ async def generate_report(start_date=None, end_date=None):
         detection_time,
         initial_price,
         initial_mcap,
-        gain_10m,
+        gain_1m,
+        gain_5m,
+        gain_15m,
         gain_30m,
         gain_1h
     FROM contracts
