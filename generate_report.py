@@ -15,10 +15,14 @@ def setup_database():
         detection_time TEXT,
         initial_price REAL,
         initial_mcap REAL,
-        price_10m REAL,
+        price_1m REAL,
+        price_5m REAL,
+        price_15m REAL,
         price_30m REAL,
         price_1h REAL,
-        gain_10m REAL,
+        gain_1m REAL,
+        gain_5m REAL,
+        gain_15m REAL,
         gain_30m REAL,
         gain_1h REAL
     )
@@ -43,13 +47,15 @@ def create_report():
     
     try:
         query = '''
-        SELECT 
+        SELECT DISTINCT
             contract_address as "Contrato",
             detection_date as "Data",
             detection_time as "Hora",
             initial_price as "Preço Inicial",
             initial_mcap as "Market Cap Inicial",
-            gain_10m as "Ganho 10min (%)",
+            gain_1m as "Ganho 1min (%)",
+            gain_5m as "Ganho 5min (%)",
+            gain_15m as "Ganho 15min (%)",
             gain_30m as "Ganho 30min (%)",
             gain_1h as "Ganho 1h (%)"
         FROM contracts
@@ -63,10 +69,13 @@ def create_report():
             print("Nenhum dado encontrado para o período especificado.")
             return
         
+        # Remover duplicatas, se houver
+        df = df.drop_duplicates(subset=['Contrato', 'Data', 'Hora'])
+        
         # Formatar números
         df["Preço Inicial"] = df["Preço Inicial"].map('${:,.6f}'.format)
         df["Market Cap Inicial"] = df["Market Cap Inicial"].map('${:,.2f}'.format)
-        for col in ["Ganho 10min (%)", "Ganho 30min (%)", "Ganho 1h (%)"]:
+        for col in ["Ganho 1min (%)", "Ganho 5min (%)", "Ganho 15min (%)", "Ganho 30min (%)", "Ganho 1h (%)"]:
             df[col] = df[col].map('{:,.2f}%'.format)
         
         # Salvar relatório
